@@ -1,0 +1,220 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html ng-app>
+<head>
+	<script type="text/javascript" src="angular.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+
+	<title>Arrange Numbers - By B. Nikhil Baliga</title>
+</head>
+<body>
+
+<div class="container">
+
+	<h3>Arrange 'em</h3>
+
+	<div class="area" ng-controller="NumController">
+
+		<div class="well row">
+			<div class="span4">
+				<button class="btn btn-primary" ng-click="generate_problem()">Start Game</button>
+			</div>
+
+			<div class="span2 toolbar_label">
+				Moves: {{moves_made}}
+			</div>
+
+			<div class="span4 toolbar_label">
+				Level: 
+				<select ng-model="board_size" class="span2">
+					<option value='3'>3</option>
+					<option value='4'>4</option>
+					<option value='5'>5</option>
+					<option value='6'>6</option>
+				</select>
+			</div>
+			
+		</div>
+
+		<div class="row">
+
+			<div class="span8">
+
+				<table class="game_table">
+					<tr ng-repeat="(row_num, each_row) in data" class="each_row">
+						<td ng-repeat="(col_num, each_cell) in each_row" class="each_cell" ng-click="move_tile(row_num, col_num)">{{each_cell}}</td>
+					</tr>
+				</table>
+
+			</div>
+
+			<div class="span3 well">
+				Classic Game
+				<ul>
+					<li>Click On Start Game</li>
+					<li>Click on a tile that's adjacent to empty slot to move the tile to that place</li>
+					<li>Objective is to sort the numbers in ascending order</li>
+				</ul>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+<script type="text/javascript">
+
+function NumController($scope) {
+	$scope.board_size = 4;
+
+	$scope.data = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, ""]];
+	$scope.moves_made = 0;
+
+	var correct_answer = "";
+
+	$scope.move_tile = function(row, col) {
+		if (row != 0) {
+			if ($scope.data[row - 1][col] == "") {
+				$scope.data[row - 1][col] = $scope.data[row][col];
+				clean_up();
+			}
+		} 
+
+		if (row != $scope.data.length - 1) {
+			if ($scope.data[row + 1][col] == "") {
+				$scope.data[row + 1][col] = $scope.data[row][col];
+				clean_up();
+			}
+		} 
+
+		if (col != 0) {
+			if ($scope.data[row][col - 1] == "") {
+				$scope.data[row][col - 1] = $scope.data[row][col];
+				clean_up();
+			}
+		} 
+
+		if (col != $scope.data.length - 1) {
+			if ($scope.data[row][col + 1] == "") {
+				$scope.data[row][col + 1] = $scope.data[row][col];
+				clean_up();
+			}
+		}
+
+		function clean_up() {
+			$scope.data[row][col] = "";
+			$scope.moves_made++;
+			check_if_solved();
+		}
+
+		function check_if_solved() {
+
+			if ($scope.data[$scope.board_size - 1][$scope.board_size - 1] == "") {
+				for (var i = 0; i < $scope.board_size; i++) {
+					for (var j = 0; j < $scope.board_size; j++) {
+						if ($scope.data[i][j] != ($scope.board_size * i) + j + 1) {
+
+							if (i == j && i == $scope.board_size - 1) {
+								continue;
+							}
+
+							return;
+						}
+					}
+				}
+
+				alert("You Win");
+			}
+		}
+	}
+
+	$scope.generate_problem = function() {
+		var upper_limit = $scope.board_size * $scope.board_size;
+		$scope.moves_made = 0;
+
+		$scope.data = [];
+
+
+		var temp_array;
+
+		do {
+
+			temp_array = [];
+			while (temp_array.length != upper_limit) {
+				var num = (parseInt(Math.random() * 100, 10) % upper_limit);
+
+				if (temp_array.indexOf(num) == -1) {
+					temp_array.push(num);
+				}
+
+			}
+		} while (!check_if_solvable(temp_array));
+
+		temp_array[temp_array.indexOf(0)] = "";
+
+		for (var i = 0; i < $scope.board_size; i++) {
+			$scope.data.push(temp_array.splice(0, $scope.board_size));
+		}
+	}
+
+	function check_if_solvable(temp_array) {
+		// Not all generated games are solvable
+		// I learnt this after going crazy trying to solve some
+		// Reference: http://www.cs.bham.ac.uk/~mdr/teaching/modules04/java2/TilesSolvability.html
+
+		var inversions = 0;
+		var blank_row_position_from_bottom;
+
+		for (var i = 0; i < temp_array.length; i++) {
+
+			if (temp_array[i] == 0) {
+				blank_row_position_from_bottom = $scope.board_size - parseInt(i / $scope.board_size, 10);
+				continue;
+			}
+
+			for (var j = i + 1; j < temp_array.length; j++) {
+				if (temp_array[j] <  temp_array[i] && temp_array[j] != 0) {
+					inversions++;
+				}
+			}
+		}
+
+		var grid_width_odd = $scope.board_size % 2 != 0;
+		var grid_width_even = $scope.board_size % 2 == 0;
+		var blank_on_odd_row_bottom = blank_row_position_from_bottom % 2 != 0;
+		var inversions_even = inversions % 2 == 0;
+		var inversions_odd = inversions % 2 != 0;
+
+		return ((grid_width_odd) && (inversions_even) )  ||  ((grid_width_even) && ((blank_on_odd_row_bottom) == (inversions_even)));
+
+	}
+}
+
+</script>
+
+<style type="text/css">
+	.game_table {
+		margin: 50px;
+		border: solid 10px #222;
+		box-shadow: 5px 5px 5px silver;
+	}
+
+	.each_cell {
+		border: solid 1px silver;
+		height: 50px;
+		width: 50px;
+		text-align: center;
+		font-size: 20px;
+		color: #444;
+		box-shadow: 2px 2px 2px silver;
+	}
+
+	.toolbar_label {
+		font-size: 20px;
+	}
+</style>
+
+</body>
+</html>
