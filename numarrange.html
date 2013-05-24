@@ -6,18 +6,18 @@
 	<script type="text/javascript" src="angular.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="bootstrap.min.css">
 
-	<title>Arrange Numbers - By B. Nikhil Baliga</title>
+	<title>Arrange Numbers - By B. Nikhil Baliga</title> 
 </head>
 <body>
 
 <div class="container">
 
-	<h3>Arrange 'em</h3>
+	<h3>Arrange 'em</h3> (<a href="http://nikhilbaliga.com">Nikhil Baliga</a>)
 
 	<div class="area" ng-controller="NumController">
 
 		<div class="well row">
-			<div class="span4">
+			<div class="span3">
 				<button class="btn btn-primary" ng-click="generate_problem()">Start Game</button>
 			</div>
 
@@ -33,6 +33,20 @@
 					<option value='5'>5</option>
 					<option value='6'>6</option>
 				</select>
+			</div>
+
+			<div class="span3">
+				<!-- FB Like Button -->
+				<div id="fb-root"></div>
+				<script>(function(d, s, id) {
+				  var js, fjs = d.getElementsByTagName(s)[0];
+				  if (d.getElementById(id)) return;
+				  js = d.createElement(s); js.id = id;
+				  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=384445354986885";
+				  fjs.parentNode.insertBefore(js, fjs);
+				}(document, 'script', 'facebook-jssdk'));</script>
+				<div class="fb-like" data-href="http://nikhilbaliga.com/numarrange/numarrange.html" data-send="true" data-width="450" data-show-faces="true"></div>
+				<!-- FB Like Button -->
 			</div>
 			
 		</div>
@@ -56,6 +70,16 @@
 					<li>Click on a tile that's adjacent to empty slot to move the tile to that place</li>
 					<li>Objective is to sort the numbers in ascending order</li>
 				</ul>
+
+				<hr>
+				<a href="https://github.com/baliganikhil/numarrange">Fork</a>
+
+				<p>
+					<h4>Technical Note</h4>
+					It is not just a random arrangement of numbers. For a game to be solvable, <a href="http://www.cs.bham.ac.uk/~mdr/teaching/modules04/java2/TilesSolvability.html">some conditions</a> have to be met.
+				</p>
+
+				<p>Also, this uses AngularJS - Just FYI</p>
 			</div>
 
 		</div>
@@ -196,7 +220,7 @@ function NumController($scope) {
 
 <style type="text/css">
 	.game_table {
-		margin: 50px;
+		margin: 20px;
 		border: solid 10px #222;
 		box-shadow: 5px 5px 5px silver;
 	}
