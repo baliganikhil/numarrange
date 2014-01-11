@@ -3,8 +3,8 @@
 
 <html ng-app>
 <head>
-	<script type="text/javascript" src="angular.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+	<script type="text/javascript" src="/numarrange/angular.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="/numarrange/bootstrap.min.css">
 
 	<title>Arrange Numbers - By B. Nikhil Baliga</title> 
 </head>
@@ -12,7 +12,7 @@
 
 <div class="container">
 
-	<h3>Arrange 'em</h3> (<a href="http://nikhilbaliga.com">Nikhil Baliga</a>)
+	<h3>Arrange 'em</h3> (<a href="http://www.nikhilbaliga.com">Nikhil Baliga</a>)
 
 	<div class="area" ng-controller="NumController">
 
@@ -223,6 +223,10 @@ function NumController($scope) {
 		margin: 20px;
 		border: solid 10px #222;
 		box-shadow: 5px 5px 5px silver;
+	}
+
+	.game_table:hover {
+		cursor: pointer;
 	}
 
 	.each_cell {
